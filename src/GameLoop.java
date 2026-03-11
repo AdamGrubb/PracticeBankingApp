@@ -6,10 +6,15 @@ public class GameLoop {
     private ArrayList<IAccount> accounts = new ArrayList<IAccount>();
     private boolean activeGameLoop = false;
     private Scanner scanner;
+    private IAccountService accountService;
 
+    public GameLoop(IAccountService accountService) {
+        this.accountService = accountService;
+    }
 
     public void Start() {
         activeGameLoop = true;
+
         scanner = new Scanner(System.in);
         while (activeGameLoop) {
             ShowMenu();
@@ -43,7 +48,6 @@ public class GameLoop {
     private void AddAccount() {
         IAccount account = new DebitAccount();
 
-
         System.out.println("Input name of account");
         String accountName = scanner.nextLine();
         account.setName(accountName);
@@ -52,6 +56,17 @@ public class GameLoop {
 
     private void ListAccounts() {
         int choices = 0;
+
+        ServiceResponse<ArrayList<IAccount>> response = accountService.GetAccounts();
+
+        if (response.Success && response.Data != null) {
+            accounts = response.Data;
+        }
+        else {
+            System.out.println("Something went wrong: " + response.Message);
+            activeGameLoop = false;
+        }
+
         for (IAccount account: accounts) {
             choices++;
             String accountName = String.format("%d. %s", choices, account.getName());
