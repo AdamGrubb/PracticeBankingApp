@@ -26,7 +26,12 @@ public class MockAccountService implements IAccountService {
     }
 
     public ServiceResponse<IAccount> CreateAccount(IAccount account) {
-        return null;
+        ServiceResponse<IAccount> serviceResponse = new ServiceResponse<>();
+        accounts.add(account);
+        int indexOfNewAccount = accounts.indexOf(account);
+        serviceResponse.Data = accounts.
+        return serviceResponse;
+
     }
 
     public ServiceResponse<IAccount> DeleteAccount(IAccount account) {
